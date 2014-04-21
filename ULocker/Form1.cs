@@ -70,6 +70,84 @@ namespace ULocker
 			}
 			return RemoveableDeviceCount;
 		}
+
+		// 在GetRemoveableDeviceSerialNumber中对searcher的值进行过滤
+		// 状态：完成
+		// 完成日期：2014.4.22
+		// 最后修改日期：2014.4.22
+		private string getValueInQuotes(string inValue)
+		{
+			string parsedValue = "";
+
+			int posFoundStart = 0;
+			int posFoundEnd = 0;
+
+			posFoundStart = inValue.IndexOf("\"");
+			posFoundEnd = inValue.IndexOf("\"", posFoundStart + 1);
+
+			parsedValue = inValue.Substring(posFoundStart + 1, (posFoundEnd - posFoundStart) - 1);
+
+			return parsedValue;
+		}
+
+		// 在GetRemoveableDeviceSerialNumber 中对serialnumber进行过滤
+		// 状态：完成
+		// 完成日期：2014.4.22
+		// 最后修改日期：2014.4.22
+		private string parseSerialFromDeviceID(string deviceId)
+		{
+			string[] splitDeviceId = deviceId.Split('\\');
+			string[] serialArray;
+			string serial;
+			int arrayLen = splitDeviceId.Length - 1;
+
+			serialArray = splitDeviceId[arrayLen].Split('&');
+			serial = serialArray[0];
+
+			return serial;
+		}
+
+		// 获取指定盘符的序列号
+		// 参数DeviceName：指定盘符，例如C:\
+		// 返回值为序列号
+		// 状态：完成
+		// 完成日期：2014-04-22
+		// 最后修改日期：2014-04-22
+		string GetRemoveableDeviceSerialNumber(string DeviceName)
+		{
+			string[] diskArray;
+			string driveNumber;
+			string driveLetter;
+
+			string serialNumber = null;
+
+			ManagementObjectSearcher searcher = 
+				new ManagementObjectSearcher("SELECT * FROM Win32_LogicalDiskToPartition");
+			foreach (ManagementObject dm in searcher.Get())
+			{
+				diskArray = null;
+				driveLetter = getValueInQuotes(dm["Dependent"].ToString());
+				diskArray = getValueInQuotes(dm["Antecedent"].ToString()).Split(',');
+				driveNumber = diskArray[0].Remove(0, 6).Trim();
+				string[] t = DeviceName.Split('\\');
+ 				if (driveLetter == t[0])
+ 				{
+// 					/* This is where we get the drive serial */
+ 					ManagementObjectSearcher disks = new ManagementObjectSearcher("SELECT * FROM Win32_DiskDrive");
+ 					foreach (ManagementObject disk in disks.Get())
+ 					{
+ 						if (disk["Name"].ToString() == ("\\\\.\\PHYSICALDRIVE" + driveNumber) & disk["InterfaceType"].ToString() == "USB")
+ 						{
+ 							//this._serialNumber = parseSerialFromDeviceID(disk["PNPDeviceID"].ToString());
+							//MessageBox.Show(disk["PNPDeviceID"].ToString());
+							serialNumber = parseSerialFromDeviceID(disk["PNPDeviceID"].ToString());
+						}
+					}
+ 				}
+			}
+
+			return serialNumber;
+		}
 		
 		// 打开文件按钮
 		// 状态：完成
@@ -88,18 +166,22 @@ namespace ULocker
 			}
 		}
 
-
-		// 加密按钮
-		// 状态：编写中
-		// 完成日期：
-		// 最后修改日期：2014.4.21
-		private void buttonCryptoFile_Click(object sender, EventArgs e)
+		// 点击加密按钮时检测是否所有的编辑框都填写内容
+		// 返回值：true，所有都填写完整
+		// 返回值：false，有内容未填写
+		// 状态：完成
+		// 完成日期：2014-04-22
+		// 最后修改时间：2014-04-22
+		public bool CheckIsFillBlank()
 		{
+			bool res = true;
+
+
 			// 先检查一下U盘数量，如果没有选中或者是U盘数量为0的话，就报错。
 			if (gRemoveableDeviceCount == 0 /*|| RemoveableDeviceNumber == 0*/)
 			{
 				MessageBox.Show("U盘错误！");
-				return;
+				return false;
 			}
 
 			// 检查是否选中U盘
@@ -110,14 +192,41 @@ namespace ULocker
 			}
 			catch (System.Exception ex)
 			{
-				MessageBox.Show("请选择U盘！\n" + ex.Message);
-				return;
+				MessageBox.Show("请选择U盘！");
+				return false;
 			}
+
+			// 检测是否选择文件
+			//MessageBox.Show(textBoxCryptionFilePath.Text);
+			if (textBoxCryptionFilePath.Text.Length == 0)
+			{
+				MessageBox.Show("请选择需要加密的文件!");
+				return false;
+			}
+			return true;
+		}
+
+
+		// 加密按钮
+		// 状态：编写中
+		// 完成日期：
+		// 最后修改日期：2014.4.21
+		private void buttonCryptoFile_Click(object sender, EventArgs e)
+		{
+
+			if (CheckIsFillBlank() == false)
+			{
+				return; ;
+			}
+
+			string strSelectDevice = comboBoxRemoveableDevice.SelectedItem.ToString();
 
 			// 将combox中获取的内容分割，得到U盘盘符
 			// TargetDevice[0]就是盘符
 			string[] TargetDevice = strSelectDevice.Split(' ');
-			//MessageBox.Show(TargetDevice[0]);
+			
+			// 获取U盘序列号，存在serialNumber中
+			string serialNumber = GetRemoveableDeviceSerialNumber(TargetDevice[0]);
 
 		}
 
