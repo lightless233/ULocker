@@ -9,6 +9,8 @@ using System.Windows.Forms;
 using System.IO;
 using System.Management;
 using System.Threading;
+using System.Security.Cryptography;
+using System.Net;
 
 namespace ULocker
 {
@@ -36,6 +38,12 @@ namespace ULocker
 
 			this.comboBoxRemoveableDevice.DropDownStyle = ComboBoxStyle.DropDownList;
 
+			this.comboBox2.SelectedIndex = 0;
+			this.comboBox2.DropDownStyle = ComboBoxStyle.DropDownList;
+
+			// comboBox3: 解密用的U盘
+			this.comboBox3.DropDownStyle = ComboBoxStyle.DropDownList;
+
 			//获取驱动器信息
 			gRemoveableDeviceCount = GetDriverType();
 		}
@@ -52,6 +60,7 @@ namespace ULocker
 			int RemoveableDeviceCount = 0;
 			// 清空combox
 			comboBoxRemoveableDevice.Items.Clear();
+			comboBox3.Items.Clear();
 			// 获取所有驱动器信息
 			DriveInfo[] allDrivers = DriveInfo.GetDrives();
 			foreach (DriveInfo d in allDrivers)
@@ -64,6 +73,11 @@ namespace ULocker
 					//MessageBox.Show(d.VolumeLabel.ToString());
 					comboBoxRemoveableDevice.Items.Add(d.Name.ToString() + 
 						" " + d.VolumeLabel.ToString() + 
+						" " + d.DriveFormat.ToString() +
+						" " + d.TotalSize.ToString());
+
+					comboBox3.Items.Add(d.Name.ToString() +
+						" " + d.VolumeLabel.ToString() +
 						" " + d.DriveFormat.ToString() +
 						" " + d.TotalSize.ToString());
 				}
@@ -139,8 +153,9 @@ namespace ULocker
  						if (disk["Name"].ToString() == ("\\\\.\\PHYSICALDRIVE" + driveNumber) & disk["InterfaceType"].ToString() == "USB")
  						{
  							//this._serialNumber = parseSerialFromDeviceID(disk["PNPDeviceID"].ToString());
-							//MessageBox.Show(disk["PNPDeviceID"].ToString());
+							/*MessageBox.Show(disk["PNPDeviceID"].ToString());*/
 							serialNumber = parseSerialFromDeviceID(disk["PNPDeviceID"].ToString());
+/*							MessageBox.Show(serialNumber);*/
 						}
 					}
  				}
@@ -227,8 +242,48 @@ namespace ULocker
 			
 			// 获取U盘序列号，存在serialNumber中
 			string serialNumber = GetRemoveableDeviceSerialNumber(TargetDevice[0]);
+			// 调试时使用
+			// MessageBox.Show(serialNumber);
+
+			// 将数据Post到服务端
+			string postData = "uKeyu=" + serialNumber;
+			string recvData = PostAndRecv(postData);
+			MessageBox.Show(recvData);
 
 		}
+
+		// 向服务器POST数据并获得回显
+		// 状态：完成
+		// 完成日期：2014年5月9日 19:37:36
+		// 最后修改日期：2014年5月9日 19:37:46
+		// 参数：postData，待传递的参数，为a=1&b=2的形式
+		// 返回值：post后的回显
+		public string PostAndRecv(string postData)
+		{
+			byte[] byteArray = Encoding.UTF8.GetBytes(postData);
+
+			Uri target = new Uri("http://127.0.0.1/gs/recvukey.php");
+			WebRequest request = WebRequest.Create(target);
+
+			request.Method = "POST";
+			request.ContentType = "application/x-www-form-urlencoded";
+			request.ContentLength = byteArray.Length;
+
+			using (var dataStream = request.GetRequestStream())
+			{
+				dataStream.Write(byteArray, 0, byteArray.Length);
+			}
+
+			string content;
+
+			using (var response = (HttpWebResponse)request.GetResponse())
+			{
+				StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8);
+				content = reader.ReadToEnd();
+			}
+			return content;
+		}
+
 
 		// 关闭按钮
 		// 状态：完成

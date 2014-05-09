@@ -53,6 +53,10 @@
 			this.groupBox6 = new System.Windows.Forms.GroupBox();
 			this.button6 = new System.Windows.Forms.Button();
 			this.textBox4 = new System.Windows.Forms.TextBox();
+			this.groupBox9 = new System.Windows.Forms.GroupBox();
+			this.textBox1 = new System.Windows.Forms.TextBox();
+			this.textBox5 = new System.Windows.Forms.TextBox();
+			this.groupBox10 = new System.Windows.Forms.GroupBox();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
 			this.groupBox7.SuspendLayout();
@@ -64,6 +68,8 @@
 			this.groupBox4.SuspendLayout();
 			this.groupBox5.SuspendLayout();
 			this.groupBox6.SuspendLayout();
+			this.groupBox9.SuspendLayout();
+			this.groupBox10.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// tabControl1
@@ -79,6 +85,7 @@
 			// tabPage1
 			// 
 			this.tabPage1.BackColor = System.Drawing.Color.WhiteSmoke;
+			this.tabPage1.Controls.Add(this.groupBox9);
 			this.tabPage1.Controls.Add(this.groupBox7);
 			this.tabPage1.Controls.Add(this.groupBox3);
 			this.tabPage1.Controls.Add(this.groupBox2);
@@ -115,7 +122,7 @@
 			this.groupBox3.Controls.Add(this.textBox2);
 			this.groupBox3.Location = new System.Drawing.Point(155, 127);
 			this.groupBox3.Name = "groupBox3";
-			this.groupBox3.Size = new System.Drawing.Size(232, 59);
+			this.groupBox3.Size = new System.Drawing.Size(110, 59);
 			this.groupBox3.TabIndex = 4;
 			this.groupBox3.TabStop = false;
 			this.groupBox3.Text = "密钥";
@@ -124,7 +131,7 @@
 			// 
 			this.textBox2.Location = new System.Drawing.Point(6, 24);
 			this.textBox2.Name = "textBox2";
-			this.textBox2.Size = new System.Drawing.Size(220, 21);
+			this.textBox2.Size = new System.Drawing.Size(93, 21);
 			this.textBox2.TabIndex = 0;
 			// 
 			// groupBox2
@@ -202,6 +209,7 @@
 			// tabPage2
 			// 
 			this.tabPage2.BackColor = System.Drawing.Color.WhiteSmoke;
+			this.tabPage2.Controls.Add(this.groupBox10);
 			this.tabPage2.Controls.Add(this.groupBox8);
 			this.tabPage2.Controls.Add(this.button4);
 			this.tabPage2.Controls.Add(this.groupBox4);
@@ -247,7 +255,7 @@
 			this.groupBox4.Controls.Add(this.textBox3);
 			this.groupBox4.Location = new System.Drawing.Point(155, 127);
 			this.groupBox4.Name = "groupBox4";
-			this.groupBox4.Size = new System.Drawing.Size(232, 59);
+			this.groupBox4.Size = new System.Drawing.Size(110, 59);
 			this.groupBox4.TabIndex = 9;
 			this.groupBox4.TabStop = false;
 			this.groupBox4.Text = "密钥";
@@ -256,7 +264,7 @@
 			// 
 			this.textBox3.Location = new System.Drawing.Point(6, 24);
 			this.textBox3.Name = "textBox3";
-			this.textBox3.Size = new System.Drawing.Size(220, 21);
+			this.textBox3.Size = new System.Drawing.Size(93, 21);
 			this.textBox3.TabIndex = 0;
 			// 
 			// groupBox5
@@ -320,6 +328,40 @@
 			this.textBox4.Size = new System.Drawing.Size(390, 21);
 			this.textBox4.TabIndex = 0;
 			// 
+			// groupBox9
+			// 
+			this.groupBox9.Controls.Add(this.textBox1);
+			this.groupBox9.Location = new System.Drawing.Point(271, 127);
+			this.groupBox9.Name = "groupBox9";
+			this.groupBox9.Size = new System.Drawing.Size(128, 59);
+			this.groupBox9.TabIndex = 6;
+			this.groupBox9.TabStop = false;
+			this.groupBox9.Text = "注册时的用户名";
+			// 
+			// textBox1
+			// 
+			this.textBox1.Location = new System.Drawing.Point(6, 23);
+			this.textBox1.Name = "textBox1";
+			this.textBox1.Size = new System.Drawing.Size(116, 21);
+			this.textBox1.TabIndex = 0;
+			// 
+			// textBox5
+			// 
+			this.textBox5.Location = new System.Drawing.Point(6, 23);
+			this.textBox5.Name = "textBox5";
+			this.textBox5.Size = new System.Drawing.Size(116, 21);
+			this.textBox5.TabIndex = 0;
+			// 
+			// groupBox10
+			// 
+			this.groupBox10.Controls.Add(this.textBox5);
+			this.groupBox10.Location = new System.Drawing.Point(271, 127);
+			this.groupBox10.Name = "groupBox10";
+			this.groupBox10.Size = new System.Drawing.Size(128, 59);
+			this.groupBox10.TabIndex = 11;
+			this.groupBox10.TabStop = false;
+			this.groupBox10.Text = "注册时的用户名";
+			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -343,6 +385,10 @@
 			this.groupBox5.ResumeLayout(false);
 			this.groupBox6.ResumeLayout(false);
 			this.groupBox6.PerformLayout();
+			this.groupBox9.ResumeLayout(false);
+			this.groupBox9.PerformLayout();
+			this.groupBox10.ResumeLayout(false);
+			this.groupBox10.PerformLayout();
 			this.ResumeLayout(false);
 
 		}
@@ -374,6 +420,10 @@
 		private System.Windows.Forms.ComboBox comboBoxRemoveableDevice;
 		private System.Windows.Forms.GroupBox groupBox8;
 		private System.Windows.Forms.ComboBox comboBox3;
+		private System.Windows.Forms.GroupBox groupBox9;
+		private System.Windows.Forms.TextBox textBox1;
+		private System.Windows.Forms.GroupBox groupBox10;
+		private System.Windows.Forms.TextBox textBox5;
 	}
 }
 
